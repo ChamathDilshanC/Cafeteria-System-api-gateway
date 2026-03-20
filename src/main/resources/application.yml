@@ -2,7 +2,10 @@ spring:
   application:
     name: api-gateway
   config:
-    import: "optional:configserver:${CONFIG_SERVER_URI:http://localhost:8888}"
+    import: "configserver:${CONFIG_SERVER_URI:http://localhost:8888}"
+  cloud:
+    config:
+      fail-fast: true
   # Routes below are fallback defaults used when Config Server is unreachable.
   # When Config Server IS reachable, api-gateway.yml from the config-server overrides these.
   cloud:
