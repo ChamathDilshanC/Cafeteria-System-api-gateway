@@ -2,41 +2,10 @@ spring:
   application:
     name: api-gateway
   config:
-    import: "configserver:${CONFIG_SERVER_URI:http://localhost:9000}"
+    import: 'configserver:${CONFIG_SERVER_URI:http://localhost:9000}'
   cloud:
     config:
       fail-fast: true
-  # Routes below are fallback defaults used when Config Server is unreachable.
-  # When Config Server IS reachable, api-gateway.yml from the config-server overrides these.
-  cloud:
-    gateway:
-      server:
-        webflux:
-          routes:
-            - id: user-service
-              uri: lb://USER-SERVICE
-              predicates:
-                - Path=/api/auth/**, /api/users/**
-              filters:
-                - StripPrefix=1
-            - id: menu-service
-              uri: lb://MENU-SERVICE
-              predicates:
-                - Path=/api/menu/**, /api/categories/**
-              filters:
-                - StripPrefix=1
-            - id: order-service
-              uri: lb://ORDER-SERVICE
-              predicates:
-                - Path=/api/orders/**
-              filters:
-                - StripPrefix=1
-            - id: kitchen-service
-              uri: lb://KITCHEN-SERVICE
-              predicates:
-                - Path=/api/kitchen/**
-              filters:
-                - StripPrefix=1
 
 server:
   port: 8080
