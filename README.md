@@ -41,7 +41,7 @@ The API Gateway serves as the single entry point for all client requests to the 
 | **Port**                | `8080`                  |
 | **Base Path**           | `/api`                  |
 | **Eureka Registration** | Yes                     |
-| **Config Server**       | `http://localhost:8888` |
+| **Config Server**       | `http://localhost:9000` |
 
 ## 🌐 API Routes
 
@@ -65,7 +65,7 @@ The API Gateway intelligently routes requests to backend services using the foll
 - Java 25
 - Maven 3.9+
 - Port 8080 available
-- Config Server running on port 8888
+- Config Server running on port 9000
 - Service Registry running on port 8761
 
 ### Build
@@ -98,7 +98,7 @@ spring:
   application:
     name: api-gateway
   config:
-    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:http://localhost:9000
 
 eureka:
   client:
@@ -179,15 +179,15 @@ spring:
 
       globalcors:
         corsConfigurations:
-          "[/**]":
-            allowedOrigins: "*"
+          '[/**]':
+            allowedOrigins: '*'
             allowedMethods:
               - GET
               - POST
               - PUT
               - DELETE
               - PATCH
-            allowedHeaders: "*"
+            allowedHeaders: '*'
 ```
 
 ## 🔀 Routing Logic
@@ -374,7 +374,7 @@ FROM eclipse-temurin:25-jdk-alpine
 WORKDIR /app
 COPY target/api-gateway-1.0.0.jar app.jar
 EXPOSE 8080
-ENV CONFIG_SERVER_URI=http://config-server:8888
+ENV CONFIG_SERVER_URI=http://config-server:9000
 ENV EUREKA_URI=http://service-registry:8761/eureka
 ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
@@ -385,12 +385,12 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 api-gateway:
   build: ./platform/api-gateway
   ports:
-    - "8080:8080"
+    - '8080:8080'
   depends_on:
     - config-server
     - service-registry
   environment:
-    - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+    - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:9000
     - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://service-registry:8761/eureka/
 ```
 
@@ -399,7 +399,7 @@ api-gateway:
 ### Environment Variables
 
 ```bash
-export SPRING_CONFIG_IMPORT=optional:configserver:http://${CONFIG_SERVER_IP}:8888
+export SPRING_CONFIG_IMPORT=optional:configserver:http://${CONFIG_SERVER_IP}:9000
 export EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://${EUREKA_IP}:8761/eureka/
 ```
 
@@ -412,7 +412,7 @@ export EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://${EUREKA_IP}:8761/eureka/
   args: ['-jar', 'platform/api-gateway/target/api-gateway-1.0.0.jar'],
   env: {
     SERVER_PORT: 8080,
-    SPRING_CONFIG_IMPORT: 'optional:configserver:http://config-server:8888',
+    SPRING_CONFIG_IMPORT: 'optional:configserver:http://config-server:9000',
     EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: 'http://service-registry:8761/eureka/'
   }
 }
@@ -507,7 +507,7 @@ mvn verify -Pintegration-tests
 
 ```
 ┌──────────────────┐
-│   Config Server  │ (8888)
+│   Config Server  │ (9000)
 └────────┬─────────┘
          │
          ▼
